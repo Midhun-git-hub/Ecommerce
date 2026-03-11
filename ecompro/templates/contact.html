@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="bg-dark text-white text-center py-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Contact Us</h1>
+        <p class="lead">We’d love to hear from you!</p>
+    </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-5">
+
+            <!-- CONTACT FORM -->
+            <div class="col-md-7">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="fw-bold mb-4">Send Us a Message</h3>
+
+                        <form>
+                            <div class="mb-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" placeholder="Enter your name">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Email address</label>
+                                <input type="email" class="form-control" placeholder="Enter your email">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Subject</label>
+                                <input type="text" class="form-control" placeholder="Enter subject">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Message</label>
+                                <textarea class="form-control" rows="4" placeholder="Write your message"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTACT INFO -->
+            <div class="col-md-5">
+                <h3 class="fw-bold mb-4">Get in Touch</h3>
+                <p class="mb-3">
+                    📍 <strong>Address:</strong><br>
+                    123 Main Street,<br>
+                    Your City, India
+                </p>
+
+                <p class="mb-3">
+                    📞 <strong>Phone:</strong><br>
+                    +91 98765 43210
+                </p>
+
+                <p class="mb-3">
+                    📧 <strong>Email:</strong><br>
+                    support@friendlystore.com
+                </p>
+
+                <div class="mt-4">
+                    <h5 class="fw-bold">Business Hours</h5>
+                    <p class="mb-1">Monday - Friday: 9 AM - 6 PM</p>
+                    <p>Saturday: 10 AM - 4 PM</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+  
+{% endblock content %}

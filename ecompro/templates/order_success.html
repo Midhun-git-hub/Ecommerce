@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5 text-center">
+    <h1 class="text-success mb-4">Order Placed Successfully!</h1>
+    <p class="lead mb-4">Thank you for your purchase. Your order has been placed and is being processed.</p>
+    <a href="{% url 'products' %}" class="btn btn-primary">
+        Continue Shopping
+    </a>
+</div>
+{% endblock content %}
