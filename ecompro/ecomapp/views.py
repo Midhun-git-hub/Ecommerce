@@ -20,13 +20,22 @@ def products(request):
     categories = Category.objects.all() 
     products = Product.objects.all()
     return render(request,'products.html', {'products': products,'categories': categories})  # ✅ Pass categories to template
+
+def product_detail(request, id):
+    categories = Category.objects.all()
+    product = get_object_or_404(Product, id=id)
+
+    return render(request, 'product_details.html', {
+        'product': product,
+        'categories': categories
+    })
     
 @login_required
 def category_products(request, slug):
     category = Category.objects.get(slug=slug)
     categories=Category.objects.all()  # used to add category list in navbar
     products = Product.objects.filter(category=category, is_active=True)
-    return render(request, 'products.html', {'products': products, 'category': category, 'categories': categories})
+    return render(request, 'categories.html', {'products': products, 'category': category, 'categories': categories})
 
 @login_required
 def cart_view(request):
@@ -87,8 +96,9 @@ def remove_from_cart(request, item_id):
     item.delete()
     return redirect('cart')
 
+@login_required
 def checkout(request):
-    cart = Cart.objects.get(user=request.user)
+    cart, created = Cart.objects.get_or_create(user=request.user)
     cart_items = cart.items.all()
 
     if not cart_items.exists():
@@ -105,14 +115,20 @@ def checkout(request):
 
     if request.method == "POST":
         address_id = request.POST.get('address_id')
+
+        if not address_id:
+            messages.error(request, "Please select an address.")
+            return redirect('checkout')
+
         address = Address.objects.filter(
-        id=address_id,
-        user=request.user
-    ).first()
+            id=address_id,
+            user=request.user
+        ).first()
 
         if not address:
             messages.error(request, "Invalid address selected.")
             return redirect('checkout')
+
         order = Order.objects.create(
             user=request.user,
             address=address,
@@ -130,7 +146,7 @@ def checkout(request):
         cart_items.delete()
         return redirect('order_success')
 
-    # Create Razorpay order only for GET
+    # Razorpay
     client = razorpay.Client(auth=(
         settings.RAZORPAY_KEY_ID,
         settings.RAZORPAY_KEY_SECRET
@@ -150,7 +166,6 @@ def checkout(request):
         'razorpay_key_id': settings.RAZORPAY_KEY_ID,
         'razorpay_amount': razorpay_order['amount'],
     })
-
 
 
 

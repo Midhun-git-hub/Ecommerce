@@ -1,69 +1,77 @@
 {% extends "base.html" %}
 {% block content %}
 
-
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Categories</h2>
-   
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <!-- ✅ IF PRODUCTS EXIST → SHOW PRODUCTS -->
+    {% if products %}
 
-        <!-- Category 1 -->
-        <div class="col">
-            <div class="card h-100 text-center">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2H-YkEA_oyXiB30EEK-HSxwGfw4sIrSZqvQ&s/300" 
-                     class="card-img-top" alt="Electronics">
-                <div class="card-body">
-                    <h5 class="card-title">Electronics</h5>
-                    <p class="card-text">Mobiles, Laptops, Accessories and more.</p>
-                    <a href="#" class="btn btn-primary w-100">View Products</a>
+        <h2 class="text-center mb-4">{{ category.name }} Products</h2>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for product in products %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+
+                    <!-- Product Image -->
+                    <img src="{{ product.product_image.url }}" 
+                         class="card-img-top"
+                         style="height: 220px; object-fit: cover;">
+
+                    <div class="card-body text-center">
+                        <h5>{{ product.name }}</h5>
+                        <p>₹{{ product.price }}</p>
+
+                        <a href="{% url 'add_to_cart' product.id %}" 
+                           class="btn btn-success w-100">
+                            Add to Cart
+                        </a>
+                    </div>
+
                 </div>
             </div>
+            {% endfor %}
         </div>
 
-        <!-- Category 2 -->
-        <div class="col">
-            <div class="card h-100 text-center">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSppPEsk5PzrLf3azFKlbbCT7fpK4gTfp-NBg&s/300" 
-                     class="card-img-top" alt="Clothing">
-                <div class="card-body">
-                    <h5 class="card-title">Clothing</h5>
-                    <p class="card-text">Men & Women fashion collection.</p>
-                    <a href="#" class="btn btn-primary w-100">View Products</a>
+    <!-- ✅ ELSE → SHOW CATEGORIES -->
+    {% else %}
+
+        <h2 class="text-center mb-4">Categories</h2>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+
+            {% for category in categories %}
+            <div class="col">
+                <div class="card h-100 text-center shadow-sm">
+
+                    <!-- 🔥 STATIC IMAGES -->
+                    {% if category.name == "Electronics" %}
+                        <img src="https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5" class="card-img-top">
+                    {% elif category.name == "Clothing" %}
+                        <img src="https://images.unsplash.com/photo-1521334884684-d80222895322" class="card-img-top">
+                    {% elif category.name == "Shoes" %}
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff" class="card-img-top">
+                    {% else %}
+                        <img src="https://via.placeholder.com/300x200?text=Category" class="card-img-top">
+                    {% endif %}
+
+                    <div class="card-body">
+                        <h5>{{ category.name }}</h5>
+
+                        <a href="{% url 'category_products' category.slug %}" 
+                           class="btn btn-primary w-100">
+                            View Products
+                        </a>
+                    </div>
+
                 </div>
             </div>
+            {% endfor %}
+
         </div>
 
-        <!-- Category 3 -->
-        <div class="col">
-            <div class="card h-100 text-center">
-                <img src="https://5.imimg.com/data5/SELLER/Default/2022/1/QZ/AO/RT/142262681/istockphoto-1301394040-170667a-500x500.jpg" 
-                     class="card-img-top" alt="Shoes">
-                <div class="card-body">
-                    <h5 class="card-title">Shoes</h5>
-                    <p class="card-text">Sports, Casual and Formal footwear.</p>
-                    <a href="#" class="btn btn-primary w-100">View Products</a>
-                </div>
-            </div>
-        </div>
+    {% endif %}
 
-        <div class="col">
-               <div class="card h-100 text-center">
-                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMgqnTewLes_zM0jjcrVnNHwRdrC9yCAGG8w&s/300" 
-                        class="card-img-top" alt=">Accessories">
-                   <div class="card-body">
-                       <h5 class="card-title">Accessories</h5>
-                       <p class="card-text">Sports, Casual and Formal footwear.</p>
-                       <a href="#" class="btn btn-primary w-100">View Products</a>
-                   </div>
-               </div>
-       </div>
-    </div>
-
-    </div>
 </div>
 
-
-
-  
-{% endblock content %}
+{% endblock %}

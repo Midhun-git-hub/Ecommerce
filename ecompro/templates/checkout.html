@@ -6,66 +6,53 @@
 
     <div class="row g-4">
 
-        <!-- LEFT SIDE - Address & Payment -->
+        <!-- LEFT SIDE -->
         <div class="col-lg-7">
             <div class="card border-0 shadow-lg rounded-4">
                 <div class="card-body p-4">
 
                     <h5 class="mb-4 fw-semibold">Select Delivery Address</h5>
 
-                    <form method="POST">
-                        {% csrf_token %}
+                    {% if addresses %}
+                        {% for address in addresses %}
+                            <div class="form-check border rounded-4 p-3 mb-3 address-card">
+                                <input class="form-check-input mt-2"
+                                       type="radio"
+                                       name="address_id"
+                                       value="{{ address.id }}">
 
-                        {% if addresses %}
-                            {% for address in addresses %}
-                                <div class="form-check border rounded-4 p-3 mb-3 address-card">
-                                    <input class="form-check-input mt-2"
-                                           type="radio"
-                                           name="address_id"
-                                           value="{{ address.id }}"
-                                           required>
+                                <label class="form-check-label w-100 ps-3">
+                                    <strong>{{ address.address_line1 }}</strong><br>
+                                    {{ address.address_line2 }}<br>
+                                    {{ address.city }} - {{ address.postal_code }}<br>
+                                    {{ address.country }}<br>
+                                    <span class="text-muted">Mobile: {{ address.mobile_no }}</span>
+                                </label>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No address found.</p>
+                    {% endif %}
 
-                                    <label class="form-check-label w-100 ps-3">
-                                        <strong>{{ address.address_line1 }}</strong><br>
-                                        {{ address.address_line2 }}<br>
-                                        {{ address.city }} - {{ address.postal_code }}<br>
-                                        {{ address.country }}<br>
-                                        <span class="text-muted">Mobile: {{ address.mobile_no }}</span>
-                                    </label>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <p class="text-muted">No address found.</p>
-                        {% endif %}
+                    <a href="{% url 'add_address' %}" 
+                       class="btn btn-outline-dark rounded-pill px-4 mb-4">
+                        + Add New Address
+                    </a>
 
-                        <a href="{% url 'add_address' %}" 
-                           class="btn btn-outline-dark rounded-pill px-4 mb-4">
-                            + Add New Address
-                        </a>
+                    <hr class="my-4">
 
-                        <hr class="my-4">
-
-                        <!-- Payment Section -->
-                        <!-- <h6 class="fw-semibold mb-3">Payment Method</h6> -->
-<!-- 
-                        <select name="payment_method" class="form-select rounded-3 mb-4">
-                            <option value="COD">Cash on Delivery</option>
-                            <option value="CARD">Credit Card</option>
-                            <option value="UPI">UPI</option>
-                        </select> -->
-
-                        <button type="submit" 
-                                class="btn btn-dark w-100 py-2 rounded-pill" id="rzp-button">
-                            Place Order
-                        </button>
-
-                    </form>
+                    <!-- BUTTON -->
+                    <button type="button" 
+                            class="btn btn-dark w-100 py-2 rounded-pill" 
+                            id="rzp-button">
+                        Place Order
+                    </button>
 
                 </div>
             </div>
         </div>
 
-        <!-- RIGHT SIDE - Order Summary -->
+        <!-- RIGHT SIDE -->
         <div class="col-lg-5">
             <div class="card border-0 shadow-lg rounded-4">
                 <div class="card-body p-4">
@@ -101,12 +88,15 @@
     transition: 0.3s ease;
 }
 </style>
+
+<!-- Razorpay -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 <script>
 document.getElementById("rzp-button").onclick = function () {
 
-    let selectedAddress = document.querySelector("input[name='address']:checked");
+    // ✅ FIXED: correct name
+    let selectedAddress = document.querySelector("input[name='address_id']:checked");
 
     if (!selectedAddress) {
         alert("Please select an address.");
@@ -114,12 +104,14 @@ document.getElementById("rzp-button").onclick = function () {
     }
 
     var options = {
-        "key": "{{ razorpay_key }}",
+        // ✅ FIXED: correct key
+        "key": "{{ razorpay_key_id }}",
         "amount": "{{ razorpay_amount }}",
         "currency": "INR",
         "name": "Your Store",
         "description": "Order Payment",
         "order_id": "{{ razorpay_order_id }}",
+
         "handler": function (response) {
 
             fetch("{% url 'verify_payment' %}", {
@@ -143,6 +135,5 @@ document.getElementById("rzp-button").onclick = function () {
     rzp.open();
 };
 </script>
-
 
 {% endblock content %}
